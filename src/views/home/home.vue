@@ -3,115 +3,29 @@
         <nav-bar class='home-nav'>
           <slot slot='center'>购物街</slot>
         </nav-bar>
-        <home-swiper :banners='banners'/>
-        <recommend-view :recommends='recommends'></recommend-view>
-        <feature-view></feature-view>
         <tab-control :titles="['流行','新款','精选']" 
-        class='tab-control' 
-        @tabClick='tabClick'></tab-control>
-        <good-list :goods="showGoods"></good-list>
-        <ul>
-          <li>列表1</li>
-          <li>列表2</li>
-          <li>列表3</li>
-          <li>列表4</li>
-          <li>列表5</li>
-          <li>列表6</li>
-          <li>列表7</li>
-          <li>列表8</li>
-          <li>列表9</li>
-          <li>列表10</li>
-          <li>列表11</li>
-          <li>列表12</li>
-          <li>列表13</li>
-          <li>列表14</li>
-          <li>列表15</li>
-          <li>列表16</li>
-          <li>列表17</li>
-          <li>列表18</li>
-          <li>列表19</li>
-          <li>列表20</li>
-          <li>列表21</li>
-          <li>列表22</li>
-          <li>列表23</li>
-          <li>列表24</li>
-          <li>列表25</li>
-          <li>列表26</li>
-          <li>列表27</li>
-          <li>列表28</li>
-          <li>列表29</li>
-          <li>列表30</li>
-          <li>列表31</li>
-          <li>列表32</li>
-          <li>列表33</li>
-          <li>列表34</li>
-          <li>列表35</li>
-          <li>列表36</li>
-          <li>列表37</li>
-          <li>列表38</li>
-          <li>列表39</li>
-          <li>列表40</li>
-          <li>列表41</li>
-          <li>列表42</li>
-          <li>列表43</li>
-          <li>列表44</li>
-          <li>列表45</li>
-          <li>列表46</li>
-          <li>列表47</li>
-          <li>列表48</li>
-          <li>列表49</li>
-          <li>列表50</li>
-          <li>列表51</li>
-          <li>列表52</li>
-          <li>列表53</li>
-          <li>列表54</li>
-          <li>列表55</li>
-          <li>列表56</li>
-          <li>列表57</li>
-          <li>列表58</li>
-          <li>列表59</li>
-          <li>列表60</li>
-          <li>列表61</li>
-          <li>列表62</li>
-          <li>列表63</li>
-          <li>列表64</li>
-          <li>列表65</li>
-          <li>列表66</li>
-          <li>列表67</li>
-          <li>列表68</li>
-          <li>列表69</li>
-          <li>列表70</li>
-          <li>列表71</li>
-          <li>列表72</li>
-          <li>列表73</li>
-          <li>列表74</li>
-          <li>列表75</li>
-          <li>列表76</li>
-          <li>列表77</li>
-          <li>列表78</li>
-          <li>列表79</li>
-          <li>列表80</li>
-          <li>列表81</li>
-          <li>列表82</li>
-          <li>列表83</li>
-          <li>列表84</li>
-          <li>列表85</li>
-          <li>列表86</li>
-          <li>列表87</li>
-          <li>列表88</li>
-          <li>列表89</li>
-          <li>列表90</li>
-          <li>列表91</li>
-          <li>列表92</li>
-          <li>列表93</li>
-          <li>列表94</li>
-          <li>列表95</li>
-          <li>列表96</li>
-          <li>列表97</li>
-          <li>列表98</li>
-          <li>列表99</li>
-          <li>列表100</li>
-        </ul>
+        class='copytab-control' 
+        @tabClick='tabClick'
+        ref='tabControl1'
+        v-show='isTabFixed'
+        ></tab-control>
+        <scroll class='contentheight' ref='scroll' 
+        :probe-type=3  :pull-up-load=true
+        @scroll='contentScroll'
+        @pullingUp='loadMore'
+        >
+          <home-swiper :banners='banners' @swiperImageLoad='swiperImageLoad'/>
+          <recommend-view :recommends='recommends'></recommend-view>
+          <feature-view></feature-view>
+          <tab-control :titles="['流行','新款','精选']" 
+          class='tab-control' 
+          @tabClick='tabClick'
+          ref='tabControl2'
+          ></tab-control>
+          <!-- tab-control 废弃的属性 :class='{fixed:isTabFixed}' -->
+          <good-list :goods="showGoods"></good-list>
+        </scroll>
+        <back-top @click.native='backClick' v-show='isShowBackTop'></back-top>
       </div>
   </template>
   <script>
@@ -120,8 +34,11 @@
   import FeatureView from './childComps/FeatureView'
 
   import NavBar from 'components/common/navbar/NavBar'
+  import Scroll from 'components/common/scroll/Scroll'
   import TabControl from 'components/content/tabControl/TabControl'
   import GoodList from 'components/content/goods/GoodList'
+  import BackTop from 'components/content/backtop/BackTop'
+  import {debounce} from 'common/utils'
 
   import { getHomeMultidata,getHomeGoods } from '@/network/home'
  
@@ -135,7 +52,11 @@
               'new':{page:0,list:[]},
               'sell':{page:0,list:[]}
             },
-            currentType:'pop'
+            currentType:'pop',
+            isShowBackTop:false,
+            tabOffsetTop:0,
+            isTabFixed:false,
+            saveY:0
           }
       },
       computed:{
@@ -149,7 +70,9 @@
         RecommendView,
         FeatureView,
         TabControl,
-        GoodList
+        GoodList,
+        Scroll,
+        BackTop
       },
       created(){
      // 请求多个数据
@@ -158,6 +81,26 @@
         this.getHomeGoods('pop')
         this.getHomeGoods('new')
         this.getHomeGoods('sell')
+
+      },
+      mounted(){
+        // 防抖动函数就是数据请求快，以至于better-scroll太频繁
+        const refresh = debounce(this.$refs.scroll.refresh,200)
+        // 监听image加载完成发过来的事件总线,
+        // ，每次图片加载就让better-scroll重新计算滚动高度
+        this.$bus.$on('itemImageLoad',()=>{
+          refresh()
+        })
+
+      },
+      destroyed(){
+          console.log('distroyed')
+      },
+      activated(){
+        this.$refs.scroll.scrollTo(0,this.saveY,0)
+      },
+      deactivated(){
+        this.saveY = this.$refs.scroll.scroll.y
       },
       methods:{
         // 事件监听相关的方法
@@ -173,6 +116,33 @@
               this.currentType = 'sell'
               break
           }
+          this.$refs.tabControl1.currentIndex = index
+          this.$refs.tabControl2.currentIndex = index
+        },
+        // 组件监听单击事件，应该是原生.native
+        backClick(){
+          // 拿取子模块的方法和数据scroll有scrollTo方法，有第三个参数传入毫秒位过度效果
+          this.$refs.scroll.scrollTo(0,0)
+        },
+        contentScroll(position){
+          // 1.判断BackTop是否显示
+          this.isShowBackTop = (-position.y) > 1000
+          // 2.决定tabControl是否吸顶(position:fixed)
+          this.isTabFixed = (-position.y) > this.tabOffsetTop
+        },
+        loadMore(){
+          // 监听上拉加载发出请求
+          // console.log('55555')
+          this.getHomeGoods(this.currentType)
+          // 由于请求回来数据会刷新客滚动的高度，所以的让better-scroll刷新滚动高度
+          // this.$refs.scroll.scroll.refresh()
+        },
+        swiperImageLoad(){
+        // 获取tabControld的offsetTop
+        // 组件是没有offsetTop属性
+        // console.log(this.$refs.tabControl.offsetTop)
+        // console.log(this.$refs.tabControl.$el.offsetTop)
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
         },
         // 网络请求的方法
         getHomeMultidata(){
@@ -189,28 +159,73 @@
           // console.log(res.data.list)
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1 
+
+          this.$refs.scroll.finishPullUp()
         })
         }
       }
   }
   </script>
   <style scoped>
-  #home {
-    margin-top:44px;
+  /* 方案一 */
+  /* #home { */
+    /* viewport height 视口高度 */
+    /* margin-top:44px; */
+    /* height:100vh; */
+  /* } */
+  /* 方案二 */
+  #home{
+    /* padding-top:44px; */
+    height:100vh;
+    position:relative;
   }
   .home-nav {
     background-color:var(--color-tint);
     color:#fff;
 
-    position:fixed;
+    /* position:fixed;
     left:0;
     right:0;
     top:0;
-    z-index:9;
+    z-index:9; */
   }
-  .tab-control{
+  .copytab-control{
+    position:relative;
+    z-index: 9
+  }
+  /* 吸顶效果消失 sticky英文粘贴的意思，因为better-scroll原因*/
+  /* .tab-control{
     position:sticky;
     top:44px;
     z-index:9;
+  } */
+
+  /* 换一个吸顶方式效果不对,因为better-scroll原因 */
+  /* .fixed{
+    position:fixed;
+    top:44px;
+    left:0;
+    right:0
+  } */
+
+
+  /* 方案一 */
+  /* .contentheight{ */
+    /* height:400px; */
+    /* 屏幕高度减去tabbar49px加上navbar的44，就是滑动高度 */
+    /* height:calc(100% - 93px); */
+    /* overflow: hidden; */
+  /* } */
+
+  /* 方案二 */
+  /* 让外层元素浮动，内层元素相对定位 */
+  .contentheight{
+    overflow:hidden;
+    position:absolute;
+    top:44px;
+    bottom:49px;
+    left:0;
+    right:0;
   }
+
   </style>
