@@ -1,3 +1,6 @@
+Object.key(object).length  可以判断对象是否是空对象
+
+
 ***Better-Scroll在决定有多少区域可以滚动时，是根据scrollerHeight属性决定***
     scrollerHeight属性是根据Better-Scroll的conent中的子组件的高度
     但是我们的首页中，刚开始在计算ScrollerHeight属性时，是没有将图片就算在内的(因为图片还没加载过来)

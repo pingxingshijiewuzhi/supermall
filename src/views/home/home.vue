@@ -43,6 +43,7 @@
   import { getHomeMultidata,getHomeGoods } from '@/network/home'
  
   export default {
+      name:"Home",
       data(){
           return {
             banners:[],
@@ -73,6 +74,24 @@
         GoodList,
         Scroll,
         BackTop
+      }, 
+      destroyed(){
+          console.log('distroyed')
+      },
+      activated(){
+          console.log('我是activated'+this.saveY)
+        this.$refs.scroll.scrollTo(0,this.saveY,0)
+        // this.$refs.scroll.scroll.startY = this.saveY
+        this.$refs.scroll.refresh()
+      },
+      deactivated(){
+    this.saveY = this.$refs.scroll.scroll.y  //getScrollY() 
+      console.log('我是deactivated'+this.saveY)
+      },
+       beforeRouteLeave (to, from, next) {
+        this.saveY = this.$refs.scroll.scroll.y   //getScrollY()     
+      console.log('我是beforeRouteLeave'+this.saveY)
+        next()
       },
       created(){
      // 请求多个数据
@@ -93,15 +112,7 @@
         })
 
       },
-      destroyed(){
-          console.log('distroyed')
-      },
-      activated(){
-        this.$refs.scroll.scrollTo(0,this.saveY,0)
-      },
-      deactivated(){
-        this.saveY = this.$refs.scroll.scroll.y
-      },
+
       methods:{
         // 事件监听相关的方法
         tabClick(index){

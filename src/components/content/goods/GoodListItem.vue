@@ -1,5 +1,5 @@
   <template>
-    <div class='goods-item'>
+    <div class='goods-item' @click='itemClick'>
         <img :src="goodsItem.show.img" alt="" @load='imageLoad'>
         <div class="goods-info">
             <p>{{goodsItem.title}}</p>
@@ -30,6 +30,9 @@
             // 默认是没有this.$bus的，所以我们在vue.prototype中加入$bus属性
             // 这个属性必须可以发送$emit,所以$bus赋值new Vue()
             this.$bus.$emit('itemImageLoad')
+        },
+        itemClick(){
+            this.$router.push('detail/'+this.goodsItem.iid)
         }
       }
   }
@@ -75,7 +78,7 @@
     width:14px;
     height:14px;
     /* hello */
-    /* background:url("~assets/img/common/collect.svg") 0 0/14px 14px; */
+    background:url("~assets/img/common/collect.svg") 0 0/14px 14px;
 }
 
   </style>
