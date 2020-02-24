@@ -39,6 +39,7 @@
   import GoodList from 'components/content/goods/GoodList'
   import BackTop from 'components/content/backtop/BackTop'
   import {debounce} from 'common/utils'
+  import {itemListenerMixin} from 'common/mixin'
 
   import { getHomeMultidata,getHomeGoods } from '@/network/home'
  
@@ -85,8 +86,12 @@
         this.$refs.scroll.refresh()
       },
       deactivated(){
+        //1. 离开页面保存Y值
     this.saveY = this.$refs.scroll.scroll.y  //getScrollY() 
       console.log('我是deactivated'+this.saveY)
+
+        // 2.取消全局事件的监听
+        this.$bus.$off('itemImageLoad',this.itemImgListener)
       },
        beforeRouteLeave (to, from, next) {
         this.saveY = this.$refs.scroll.scroll.y   //getScrollY()     
@@ -102,17 +107,9 @@
         this.getHomeGoods('sell')
 
       },
+       mixins:[itemListenerMixin],
       mounted(){
-        // 防抖动函数就是数据请求快，以至于better-scroll太频繁
-        const refresh = debounce(this.$refs.scroll.refresh,200)
-        // 监听image加载完成发过来的事件总线,
-        // ，每次图片加载就让better-scroll重新计算滚动高度
-        this.$bus.$on('itemImageLoad',()=>{
-          refresh()
-        })
-
       },
-
       methods:{
         // 事件监听相关的方法
         tabClick(index){

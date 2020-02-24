@@ -1,6 +1,6 @@
   <template>
     <div class='goods'>
-        <good-list-item v-for='item in goods' :goods-item='item' :key='item.show.img'></good-list-item>
+        <good-list-item v-for='item in goods' :goods-item='item' :key='item.title'></good-list-item>
 <!-- <h2>{{goods}}</h2> -->
     </div>
   </template>

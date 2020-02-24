@@ -1,0 +1,35 @@
+标题和内容的联动效果
+点击标题，滚动到对应的主题
+在detail中监听标题的点击;获取index
+滚动到对应的主题：
+    获取所有主题的offsetTop
+    问题：在哪里才能获取到真正的offsetTop
+        1.created肯定不行，压根不能获取元素
+        2.mounted也不行，数据还没有获取到
+        3.获取到数据的回调中也不行，DOM还没有渲染完
+        4.$nextTick也不行，欣慰图片的高度还没有被计算在内
+        5.在图片加载完成后，获取的高度才是正确
+
+数组中由于最后一个元素遍历条件和之前都不一样，导致要单独对最后一个元素判断
+(i===length-1 && positionY>=this.themeTopYs[i]))
+显得逻辑乱，判断多
+
+for(let i=0;i<length;i++){
+    if( this.currentIndex !== i && ((i<length-1 && positionY>=this.themeTopYs[i] && positionY< this.themeTopYs[i+1])
+    || (i===length-1 && positionY>=this.themeTopYs[i])) ){
+        this.currentIndex = i;
+        console.log(this.currentIndex) 将滑动值对比结束吧正确下标返回detailNavBar数据中
+        this.$refs.nav.currentIndex = this.currentIndex
+    }
+    }
+
+hack方法就是在最后一个元素后面再加一个元素，少循环一次
+    在this.themeTopYs数组中加入一个非常大的数字Number.MAX_VALUE，省的最后一个下标单独判断只大于64655
+    console.log(Number.MAX_VALUE) JS中数字最大
+    for(let i=0;i<length-1;i++){
+    if(this.currentIndex !== i && (positionY>=this.themeTopYs[i] && positionY< this.themeTopYs[i+1])){
+        this.currentIndex = i;
+        this.$refs.nav.currentIndex = this.currentIndex
+    }
+
+    }

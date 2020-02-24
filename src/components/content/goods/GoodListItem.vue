@@ -1,6 +1,6 @@
   <template>
     <div class='goods-item' @click='itemClick'>
-        <img :src="goodsItem.show.img" alt="" @load='imageLoad'>
+        <img :src="showImage" alt="" @load='imageLoad'>
         <div class="goods-info">
             <p>{{goodsItem.title}}</p>
             <span class='price'>{{goodsItem.price}}</span>
@@ -25,11 +25,23 @@
           }
        
       },
+      computed:{
+          showImage(){
+              return  this.goodsItem.image || this.goodsItem.show.img
+          }
+      },
       methods:{
         imageLoad(){
             // 默认是没有this.$bus的，所以我们在vue.prototype中加入$bus属性
             // 这个属性必须可以发送$emit,所以$bus赋值new Vue()
             this.$bus.$emit('itemImageLoad')
+            
+            // 通过路由来区分发送的事件请求
+            // if(this.$route.path.indexOf('/home')){
+            // this.$bus.$emit('homeitemImageLoad')
+            // } else if(this.$route.path.indexOf('/detail')){                
+            // this.$bus.$emit('detailitemImageLoad')
+            // }
         },
         itemClick(){
             this.$router.push('detail/'+this.goodsItem.iid)

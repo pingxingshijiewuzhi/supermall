@@ -29,7 +29,8 @@ import NavBar from 'components/common/navbar/NavBar'
       },
       methods:{
           titleClick(index){
-              this.currentIndex = index
+              this.currentIndex = index;
+              this.$emit('titleClick',index)
           },
           backClick(){
               this.$router.back()
