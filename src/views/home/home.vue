@@ -37,9 +37,9 @@
   import Scroll from 'components/common/scroll/Scroll'
   import TabControl from 'components/content/tabControl/TabControl'
   import GoodList from 'components/content/goods/GoodList'
-  import BackTop from 'components/content/backtop/BackTop'
+  // import BackTop from 'components/content/backtop/BackTop'
   import {debounce} from 'common/utils'
-  import {itemListenerMixin} from 'common/mixin'
+  import {itemListenerMixin,backTopMixin} from 'common/mixin'
 
   import { getHomeMultidata,getHomeGoods } from '@/network/home'
  
@@ -74,10 +74,10 @@
         TabControl,
         GoodList,
         Scroll,
-        BackTop
+        // BackTop
       }, 
       destroyed(){
-          console.log('distroyed')
+          console.log('如果我出现distroyed，说明keep-alive无效')
       },
       activated(){
           console.log('我是activated'+this.saveY)
@@ -93,11 +93,11 @@
         // 2.取消全局事件的监听
         this.$bus.$off('itemImageLoad',this.itemImgListener)
       },
-       beforeRouteLeave (to, from, next) {
-        this.saveY = this.$refs.scroll.scroll.y   //getScrollY()     
-      console.log('我是beforeRouteLeave'+this.saveY)
-        next()
-      },
+      //  beforeRouteLeave (to, from, next) {
+      //   this.saveY = this.$refs.scroll.scroll.y   //getScrollY()     
+      // console.log('我是beforeRouteLeave'+this.saveY)
+      //   next()
+      // },
       created(){
      // 请求多个数据
         this.getHomeMultidata()
@@ -107,7 +107,7 @@
         this.getHomeGoods('sell')
 
       },
-       mixins:[itemListenerMixin],
+       mixins:[itemListenerMixin,backTopMixin],
       mounted(){
       },
       methods:{
@@ -128,10 +128,10 @@
           this.$refs.tabControl2.currentIndex = index
         },
         // 组件监听单击事件，应该是原生.native
-        backClick(){
-          // 拿取子模块的方法和数据scroll有scrollTo方法，有第三个参数传入毫秒位过度效果
-          this.$refs.scroll.scrollTo(0,0)
-        },
+        // backClick(){
+        //   // 拿取子模块的方法和数据scroll有scrollTo方法，有第三个参数传入毫秒位过度效果
+        //   this.$refs.scroll.scrollTo(0,0)
+        // },
         contentScroll(position){
           // 1.判断BackTop是否显示
           this.isShowBackTop = (-position.y) > 1000

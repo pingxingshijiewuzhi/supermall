@@ -13,7 +13,8 @@
             <detail-comment-info :comment-info='commentInfo' ref='comment'></detail-comment-info>
             <good-list :goods="recommends" ref='recommend'></good-list>
         </scroll>
-        <!-- <detail-bottom-bar/> -->
+        <detail-bottom-bar @addCart='addToCart'/>
+        <back-top @click.native='backClick' v-show='isShowBackTop'></back-top>
     </div>
   </template>
   <script>
@@ -24,9 +25,9 @@ import DetailShopInfo from './childComps/DetailShopInfo'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailCommentInfo from './childComps/DetailCommentInfo'
-// import DetailBottomBar from './childComps/DetailBottomBar'
+import DetailBottomBar from './childComps/DetailBottomBar'
  import {debounce} from 'common/utils'
- import {itemListenerMixin} from 'common/mixin'
+ import {itemListenerMixin,backTopMixin} from 'common/mixin'
 
 
 import Scroll from 'components/common/scroll/Scroll'
@@ -61,7 +62,6 @@ import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
             this.topImages = data.itemInfo.topImages
             // 2.获取商品信息
             this.goods = new Goods(data.itemInfo,data.columns,data.shopInfo.services)
-            
             // 3.获取店铺信息
             this.Shop = new Shop(data.shopInfo)
             // 4.保存商品的详情数据
@@ -117,9 +117,9 @@ import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
        DetailParamInfo,
        DetailCommentInfo,
        GoodList,
-      //  DetailBottomBar
+       DetailBottomBar
       },
-      mixins:[itemListenerMixin],
+      mixins:[itemListenerMixin,backTopMixin],
       mounted(){
         // console.log('我是组件内部打印的mounted')
       },
@@ -151,6 +151,7 @@ import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
             this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
           },
           contentScroll(position){
+            this.isShowBackTop = (-position.y) > 1000
             // 1.获取y值
             const positionY = -position.y
             // 2.positionY和主题中值进行对比
@@ -185,6 +186,21 @@ import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
               }
            
 
+
+          },
+          addToCart(){
+            // 1.获取要展示购物车的商品信息
+            const product = {}
+            product.image = this.topImages[0]
+            product.title = this.goods.title
+            product.desc = this.goods.desc
+            product.price = this.goods.realPrice
+            product.iid = this.iid
+          // 2.将商品添加到购物车里
+          // this.$store.commit('addCart',product)
+            console.log(product)
+          // 重构
+          this.$store.dispatch('vuexaddCart',product)
 
           }
       },

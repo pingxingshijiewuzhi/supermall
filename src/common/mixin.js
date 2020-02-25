@@ -1,4 +1,5 @@
-import {debounce} from './utils'
+import { debounce } from './utils'
+import BackTop from 'components/content/backtop/BackTop'
 export const itemListenerMixin = {
   data() {
     return {    
@@ -18,4 +19,23 @@ export const itemListenerMixin = {
                 }
                 this.$bus.$on('itemImageLoad',this.itemImgListener)
     }
+}
+
+export const backTopMixin = {
+  data() {
+    return {
+      isShowBackTop:false,
+    }
+  },
+  components: {
+    BackTop
+  },
+  methods: {
+    // 由于这是detail和hone混入，但是两个人监听滑动逻辑不一样，就不能在这抽取
+    // contentScroll(position){},
+    backClick(){
+      // 拿取子模块的方法和数据scroll有scrollTo方法，有第三个参数传入毫秒位过度效果
+      this.$refs.scroll.scrollTo(0,0)
+    }
+  }
 }

@@ -1,5 +1,5 @@
   <template>
-    <div class=''>
+    <div>
     <nav-bar>
         <div slot='left' class='back' @click='backClick'>
             <!-- <h2>hello</h2> -->
@@ -49,7 +49,7 @@ import NavBar from 'components/common/navbar/NavBar'
 .active{
     color:var(--color-high-text);
 }
-/* .back img{
+.back img{
 margin-top :12px;
-} */
+}
   </style>

@@ -30,7 +30,7 @@
     },
     methods:{
         addToCart(){
-            console.log('555')
+            this.$emit('addCart')
         }
     }
 	}
@@ -40,13 +40,16 @@
 .bottom-bar {
     height:49px;
     background:#fff;
-    /* z-index:9; */
-    position:relative;
+
+    /* 方案一：为啥我行不通 */
+    /* position:relative; */
     /* bottom:49px; */
-    /* position:fixed;
+
+    position:fixed;
     left:0;
     right:0;
-    bottom:0; */
+    bottom:0;
+    
     display:flex;
     text-align:center;
 }
@@ -82,7 +85,7 @@ background-position: 0 -54px;
 .bar-right {
     font-size:15px;
     color:#fff;
-    line-height:58px;
+    line-height:49px;
 }
 .bar-right .cart {
     background-color:#ffe817;
