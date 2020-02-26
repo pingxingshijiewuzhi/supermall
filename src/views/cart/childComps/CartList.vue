@@ -34,8 +34,8 @@ import CartListItem from './CartListItem'
 
 <style scoped>
 .cart-list{
-    height:calc(100% - 44px -49px);
-    /* height:500px; */
+    height:calc(100% - 44px - 49px - 40px);
+    /* height:534px; */
 }
 
 .content{

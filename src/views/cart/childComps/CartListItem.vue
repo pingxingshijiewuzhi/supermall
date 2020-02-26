@@ -1,10 +1,10 @@
 <template>
 <div id='shop-item'>
-    <!-- <div class='item-selector'>
-
-    </div> -->
+    <div class='item-selector'>
+        <check-button :is-checked='itemInfo.checked' @click.native='checkClick'></check-button>
+    </div>
     <div class='item-img'>
-        <img :src="itemInfo.imgURL" alt="商品图片">
+        <img :src="itemInfo.image" alt="商品图片">
     </div>
     <div class='item-info'>
         <div class='item-title'>{{itemInfo.title}}</div>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import CheckButton from 'components/content/checkButton/CheckButton'
 // 这里可以自己获取购物车信息，还麻烦父组件传过来
 //  import {mapGetters} from 'vuex'
 	export default {
@@ -33,7 +34,14 @@
     computed:{
         // ...mapGetters(['cartList'])
     },
-
+    components:{
+        CheckButton
+    },
+    methods:{
+        checkClick(){
+            this.itemInfo.checked =  !this.itemInfo.checked 
+        }
+    }
 	}
 </script>
 
@@ -45,13 +53,13 @@ font-size:0;
 padding:5px;
 border-bottom:1px solid #ccc;
 }
-/* .item-selector{
+.item-selector{
 width:20px;
 display:flex;
 justify-content: center;
 align-items:center;
-} */
-.item-desc .item-title{
+}
+.item-info .item-desc ,.item-info .item-title{
     overflow: hidden;
     white-space:nowrap;
     text-overflow:ellipsis;

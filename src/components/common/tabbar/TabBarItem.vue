@@ -16,6 +16,7 @@
   </template>
   <script>
   export default {
+    name:'TabBarItem',
       data(){
           return {
             //   isActive:true

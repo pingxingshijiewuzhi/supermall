@@ -34,6 +34,8 @@ import Scroll from 'components/common/scroll/Scroll'
 import GoodList from 'components/content/goods/GoodList'
 
 import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
+
+import {mapActions} from 'vuex'
   export default {
       name:"Detail",
       data(){
@@ -132,6 +134,7 @@ import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
         // console.log(this.themeTopYs)
       },
       methods:{
+        ...mapActions(['vuexaddCart']),
         //   通过详情页图片加载完成 让插件scroll重新计算滑动高度
           imageLoadover(){
               // this.$refs.scroll.refresh()
@@ -198,9 +201,16 @@ import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
             product.iid = this.iid
           // 2.将商品添加到购物车里
           // this.$store.commit('addCart',product)
-            console.log(product)
+          
           // 重构
-          this.$store.dispatch('vuexaddCart',product)
+          this.vuexaddCart(product).then(res=>{
+            // console.log(this.$toast)
+            // this.$toast.show(res,200)
+            this.$toast.show()
+          })
+          // this.$store.dispatch('vuexaddCart',product).then(res=>{
+          //   console.log(res)
+          // })
 
           }
       },

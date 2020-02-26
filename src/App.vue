@@ -3,17 +3,17 @@
     <keep-alive exclude="Detail"> 
         <router-view></router-view>
     </keep-alive>
-    <tab-main></tab-main>
+    <tab-bar-main></tab-bar-main>
   </div>
 </template>
 
 <script>
 
-import TabMain from 'components/content/mainTabbar/TabMain'
+import TabBarMain from 'components/content/mainTabbar/TabBarMain'
 export default {
   name: 'App',
   components: {
- TabMain
+ TabBarMain
   }
 }
 </script>
