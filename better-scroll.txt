@@ -1,5 +1,9 @@
 Object.key(object).length  可以判断对象是否是空对象
 
+20200227
+baseURL = "http://123.207.32.32:8000/api/wh" 
+baseURL = "http://106.54.54.237:8000/api/wh" 
+
 
 ***Better-Scroll在决定有多少区域可以滚动时，是根据scrollerHeight属性决定***
     scrollerHeight属性是根据Better-Scroll的conent中的子组件的高度
