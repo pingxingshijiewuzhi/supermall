@@ -1,0 +1,42 @@
+1. 安装进度条 npm install --save nprogress
+在axios拦截器中加入这两个
+
+NProgress.start();
+NProgress.done();
+
+2.插件清除 console.log
+babel-plugin-transfrom-remove-console0
+
+npm install babel-plugin-transform-remove-console --save-dev
+在babelrc中配置,仅在发布阶段采用这个插件的设置
+{
+  "plugins": [ ["transform-remove-console", { "exclude": [ "error", "warn"] }] ]
+}
+
+3.生成打包日志
+vue-cli-service build --report
+
+4.configureWebpack 和 chainWebpack 作用相同，就是配置方式不同
+chainWebpack 通过链式编程的形式，来修改默认的webpack配置
+configureWebpack 通过操作对象的形式，来修改默认的webpack配置
+
+5.通过externals 加载外部CDN资源
+默认情况下，通过import 语法导入的第三方依赖包，最终会别打包合并到同一个文件中
+，从而导致打包成功后，单问价体积过大的问题
+通过webpack的externals节点。来配置并加载外部的cdn资源，凡是声明在externals中的
+第三方依赖包，都不会被打包
+
+
+node搭的后台
+const express  = require('express')
+const compression = reqiure('compression')
+const app = express()
+一定要吧压缩卸载托管静态资源之前
+
+中间件
+app.use(compression())
+app.use(express.static('./dest))//指定当前服务器目录
+
+app.listen(80,()=>{
+    console.log('server running at http://127.0.0.1)
+})
